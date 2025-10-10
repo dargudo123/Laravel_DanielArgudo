@@ -57,17 +57,38 @@ class ProyectosController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Proyectos $proyectos)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|max:255',
+            'descripcion' => 'required'
+        ]);
+        $proyecto=Proyectos::find($id);
+        $proyecto -> update($request->all());
+        return redirect('projects/')
+        ->with('success', 'Proyecto actualizado satisfactoriamente.');
+    }
+
+    public function eliminate($id) 
+    {
+        $proyecto = Proyectos::find($id);
+        return view('projects/eliminate', compact('proyecto'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Proyectos $proyectos)
+    public function destroy($id)
     {
-        //
+        $proyecto = Proyectos::find($id);
+        $proyecto->delete();
+
+         return redirect('projects/')
+        ->with('success', 'Proyecto eliminado satisfactoriamente.');
     }
+
 }
